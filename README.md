@@ -45,4 +45,4 @@ python app.py
 
 2. Open your browser and go to http://127.0.0.1:5000/
 3. Enter your Twitter username and password on the form.
-Click "Run Script" ans wait to fetch and display the result.
+Click "Run Script" and wait for the scraping process to complete and display the result.
