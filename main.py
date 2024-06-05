@@ -74,22 +74,23 @@ class TwitterScrapper:
         db = get_database()
         trending_topics = db['trendingX']
 
-        trending_topics.insert_one({
-            "trending_topics": self.trending_topics,
-            "data": datetime.now().strftime("%d-%m-%Y"),
+        record = {
+            "nameoftrend1": self.trending_topics[0],
+            "nameoftrend2": self.trending_topics[1],
+            "nameoftrend3": self.trending_topics[2],
+            "nameoftrend4": self.trending_topics[3],
+            "nameoftrend5": self.trending_topics[4],
+            "date": datetime.now().strftime("%d-%m-%Y"),
             "time": datetime.now().strftime("%H:%M:%S"),
             'ip': self.my_ip
-        })
+        }
+        response = trending_topics.insert_one(record)
+        return response
 
     def close(self):
         self.driver.quit()
 
-
-if __name__ == "__main__":
-    load_dotenv()
-    username = os.getenv("USERNAME")
-    password = os.getenv("PASSWORD")
-
+def run_scraper(username, password):
     twitterScrapper = TwitterScrapper(
         username=username,
         password=password
@@ -100,8 +101,9 @@ if __name__ == "__main__":
     sleep(10)
 
     twitterScrapper.scrape_trending(driver)
-    sleep(10)
 
-    twitterScrapper.store_trending_topics()
+    response = twitterScrapper.store_trending_topics()
 
     twitterScrapper.close()
+
+    return response

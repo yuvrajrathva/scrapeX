@@ -23,6 +23,7 @@ urllib3 = "==2.2.1"
 wsproto = "==1.2.0"
 python-dotenv = "==1.0.0"
 pymongo = "*"
+flask = "*"
 
 [dev-packages]
 
