@@ -18,16 +18,16 @@ git clone https://github.com/yuvrajrathva/scrapeX.git
 cd scrapeX
 ```
 
-2. Set up a virtual environment and install dependencies with pipenv
-
-```sh
-pipenv install
-```
-
-3. Activate the virtual environment
+2. Activate the virtual environment
 
 ```sh
 pipenv shell
+```
+
+3. Set up a virtual environment and install dependencies with pipenv
+
+```sh
+pipenv install
 ```
 
 4. Set up MongoDB
