@@ -1,5 +1,6 @@
 from selenium import webdriver
 from time import sleep
+from datetime import datetime
 import os
 from dotenv import load_dotenv
 from selenium.webdriver.chrome.service import Service
@@ -26,8 +27,9 @@ class TwitterScrapper:
         self.driver.maximize_window()
 
         self.LOGIN_URL = LOGIN_PAGE
+        self.my_ip = self.driver.execute_script("return fetch('https://api.ipify.org').then(r => r.text())")
+        print(f"My IP: {self.my_ip}")
         self.trending_topics = []
-
 
     def new_driver(self):
         driver = webdriver.Chrome(service=self.service, options=self.options)
@@ -63,11 +65,21 @@ class TwitterScrapper:
 
         what_is_happening = driver.find_element(by = By.XPATH, value = '//*[@id="react-root"]/div/div/div[2]/main/div/div/div/div[2]/div/div[2]/div/div/div/div[4]/div/section/div/div')
 
-        # loop from 3rd div to 8th div and get the text
         for i in range(3, 8):
-            # only get the text of the trending topic from second span tags (as there are many divs in the div before span tag)
             trending_topic = what_is_happening.find_element(by = By.XPATH, value = f'//*[@id="react-root"]/div/div/div[2]/main/div/div/div/div[2]/div/div[2]/div/div/div/div[4]/div/section/div/div/div[{i}]/div/div/div/div[2]').text
             self.trending_topics.append(trending_topic)
+
+    def store_trending_topics(self):
+        from db import get_database
+        db = get_database()
+        trending_topics = db['trendingX']
+
+        trending_topics.insert_one({
+            "trending_topics": self.trending_topics,
+            "data": datetime.now().strftime("%d-%m-%Y"),
+            "time": datetime.now().strftime("%H:%M:%S"),
+            'ip': self.my_ip
+        })
 
     def close(self):
         self.driver.quit()
@@ -90,5 +102,6 @@ if __name__ == "__main__":
     twitterScrapper.scrape_trending(driver)
     sleep(10)
 
+    twitterScrapper.store_trending_topics()
 
     twitterScrapper.close()
